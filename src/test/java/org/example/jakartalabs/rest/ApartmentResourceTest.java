@@ -9,25 +9,15 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-/**
- * REST Assured демо-тести для ApartmentResource.
- *
- * ⚠️  Запускати тільки з задеплоєним Tomcat на localhost:8080
- *      Run → Edit Configurations → Before launch: Deploy to Tomcat
- */
 @DisplayName("Apartment REST API — демо-тести")
 class ApartmentResourceTest {
 
     @BeforeAll
     static void setup() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port    = 8080;
+        RestAssured.port = 8080;
         RestAssured.basePath = "/jakartalabs_war_exploded/api";
     }
-
-    // ──────────────────────────────────────────────────────────────────────
-    // GET /apartments  — список, фільтри, пагінація
-    // ──────────────────────────────────────────────────────────────────────
 
     @Test
     @DisplayName("GET /apartments → 200 і повертає поле results")
@@ -83,10 +73,6 @@ class ApartmentResourceTest {
                 .body("size", equalTo(1));
     }
 
-    // ──────────────────────────────────────────────────────────────────────
-    // GET /apartments/{id}
-    // ──────────────────────────────────────────────────────────────────────
-
     @Test
     @DisplayName("GET /apartments/1 → 200 з коректним об'єктом")
     void getById_existsReturns200() {
@@ -109,10 +95,6 @@ class ApartmentResourceTest {
                 .statusCode(404)
                 .body("error", containsString("999"));
     }
-
-    // ──────────────────────────────────────────────────────────────────────
-    // POST /apartments — Create
-    // ──────────────────────────────────────────────────────────────────────
 
     @Test
     @DisplayName("POST /apartments → 201 Created з коректними даними")
@@ -204,10 +186,6 @@ class ApartmentResourceTest {
                 .body("messages", hasItem(containsString("10000")));
     }
 
-    // ──────────────────────────────────────────────────────────────────────
-    // PUT /apartments/{id} — Update
-    // ──────────────────────────────────────────────────────────────────────
-
     @Test
     @DisplayName("PUT /apartments/1 → 200 і дані оновлено")
     void update_validData_returns200() {
@@ -252,14 +230,9 @@ class ApartmentResourceTest {
                 .statusCode(404);
     }
 
-    // ──────────────────────────────────────────────────────────────────────
-    // DELETE /apartments/{id}
-    // ──────────────────────────────────────────────────────────────────────
-
     @Test
     @DisplayName("DELETE /apartments/{id} → 204 No Content (свій створений)")
     void delete_exists_returns204() {
-        // Спочатку створюємо квартиру, щоб точно знати її id
         String body = """
                 {
                   "title": "Квартира для видалення",
@@ -278,7 +251,6 @@ class ApartmentResourceTest {
                 .statusCode(201)
                 .extract().path("id");
 
-        // Тепер видаляємо її за відомим id → 204
         given()
             .when()
                 .delete("/apartments/" + createdId)
