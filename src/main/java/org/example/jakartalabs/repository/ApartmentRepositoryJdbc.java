@@ -1,6 +1,5 @@
 package org.example.jakartalabs.repository;
 
-import jakarta.ejb.Stateless;
 import org.example.jakartalabs.db.ConnectionManager;
 import org.example.jakartalabs.model.Apartment;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Stateless
 public class ApartmentRepositoryJdbc implements ApartmentRepository {
 
     private static final String TABLE = "apartments";

@@ -53,6 +53,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JPA 3.1 API (надається GlassFish / EclipseLink, scope=provided) -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- EJB 3.x API (надається GlassFish, scope=provided) -->
         <dependency>
             <groupId>jakarta.ejb</groupId>
