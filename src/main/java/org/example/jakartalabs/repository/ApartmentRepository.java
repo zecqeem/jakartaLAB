@@ -13,7 +13,11 @@ public interface ApartmentRepository {
 
     Optional<Apartment> findById(int id);
 
+    List<Apartment> findByCriteria(Integer rooms, Integer maxPrice);
+
     Apartment save(Apartment apt);
+
+    Apartment update(Apartment apt);
 
     boolean deleteById(int id);
 }

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Stateless
 public class ApartmentServiceBean implements ApartmentService {
@@ -31,10 +30,7 @@ public class ApartmentServiceBean implements ApartmentService {
 
     @Override
     public Map<String, Object> search(Integer rooms, Integer maxPrice, int page, int size) {
-        List<Apartment> filtered = repository.findAll().stream()
-                .filter(a -> rooms    == null || a.getRooms() == rooms)
-                .filter(a -> maxPrice == null || a.getPrice() <= maxPrice)
-                .collect(Collectors.toList());
+        List<Apartment> filtered = repository.findByCriteria(rooms, maxPrice);
 
         int total     = filtered.size();
         int fromIndex = Math.min(page * size, total);
@@ -69,6 +65,7 @@ public class ApartmentServiceBean implements ApartmentService {
             apt.setRooms(updated.getRooms());
             apt.setPrice(updated.getPrice());
             apt.setDescription(updated.getDescription());
+            repository.update(apt);
         });
         return existing;
     }
