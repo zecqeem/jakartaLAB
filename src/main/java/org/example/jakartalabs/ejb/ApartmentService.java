@@ -2,6 +2,7 @@ package org.example.jakartalabs.ejb;
 
 import jakarta.ejb.Local;
 import org.example.jakartalabs.model.Apartment;
+import org.example.jakartalabs.model.ApartmentParam;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,8 @@ public interface ApartmentService {
     Optional<Apartment> update(int id, Apartment updated);
 
     boolean delete(int id);
+
+    Apartment createWithParams(Apartment apt, List<ApartmentParam> params, boolean simulateFailure);
+
+    int bulkUpdatePrice(Integer rooms, int newPrice);
 }

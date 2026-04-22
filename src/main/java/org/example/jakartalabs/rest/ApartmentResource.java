@@ -6,7 +6,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.jakartalabs.ejb.ApartmentService;
 import org.example.jakartalabs.model.Apartment;
+import org.example.jakartalabs.model.BulkPriceRequest;
+import org.example.jakartalabs.model.CreateWithParamsRequest;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,6 +50,34 @@ public class ApartmentResource {
         }
         Apartment created = apartmentService.create(apt);
         return Response.status(Response.Status.CREATED).entity(created).build();
+    }
+
+    @POST
+    @Path("/with-params")
+    public Response createWithParams(CreateWithParamsRequest req) {
+        if (req == null || req.getApartment() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Тіло запиту порожнє"))
+                    .build();
+        }
+        Apartment created = apartmentService.createWithParams(
+                req.getApartment(),
+                req.getParams() != null ? req.getParams() : Collections.emptyList(),
+                req.isSimulateFailure()
+        );
+        return Response.status(Response.Status.CREATED).entity(created).build();
+    }
+
+    @PUT
+    @Path("/bulk-price")
+    public Response bulkUpdatePrice(BulkPriceRequest req) {
+        if (req == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Тіло запиту порожнє"))
+                    .build();
+        }
+        int updated = apartmentService.bulkUpdatePrice(req.getRooms(), req.getNewPrice());
+        return Response.ok(Map.of("updated", updated)).build();
     }
 
     @PUT

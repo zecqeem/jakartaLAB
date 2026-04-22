@@ -2,12 +2,15 @@ package org.example.jakartalabs.ejb;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.example.jakartalabs.model.Apartment;
+import org.example.jakartalabs.model.ApartmentParam;
 import org.example.jakartalabs.repository.ApartmentRepository;
 
 import java.util.List;
@@ -16,10 +19,14 @@ import java.util.Optional;
 import java.util.Set;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ApartmentServiceBean implements ApartmentService {
 
     @EJB
     private ApartmentRepository repository;
+
+    @EJB
+    private ApartmentParamService paramService;
 
     private static final Validator validator;
     static {
@@ -29,6 +36,7 @@ public class ApartmentServiceBean implements ApartmentService {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public Map<String, Object> search(Integer rooms, Integer maxPrice, int page, int size) {
         List<Apartment> filtered = repository.findByCriteria(rooms, maxPrice);
 
@@ -45,6 +53,7 @@ public class ApartmentServiceBean implements ApartmentService {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public Optional<Apartment> findById(int id) {
         return repository.findById(id);
     }
@@ -73,6 +82,28 @@ public class ApartmentServiceBean implements ApartmentService {
     @Override
     public boolean delete(int id) {
         return repository.deleteById(id);
+    }
+
+    @Override
+    public Apartment createWithParams(Apartment apt, List<ApartmentParam> params, boolean simulateFailure) {
+        validateOrThrow(apt);
+        Apartment created = repository.save(apt);
+        paramService.addParamsOrFail(created, params, simulateFailure);
+        return created;
+    }
+
+    @Override
+    public int bulkUpdatePrice(Integer rooms, int newPrice) {
+        if (newPrice % 100 != 0) {
+            throw new BusinessException(
+                    "Ціна " + newPrice + " не кратна 100 — відкат усіх змін");
+        }
+        List<Apartment> targets = repository.findByCriteria(rooms, null);
+        for (Apartment apt : targets) {
+            apt.setPrice(newPrice);
+            repository.update(apt);
+        }
+        return targets.size();
     }
 
     private void validateOrThrow(Apartment apt) {
