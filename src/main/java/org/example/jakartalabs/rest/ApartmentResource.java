@@ -33,10 +33,6 @@ public class ApartmentResource {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────
-    // GET /api/apartments
-    // Параметри: rooms (фільтр), maxPrice (фільтр), page (пагінація), size (пагінація)
-    // ─────────────────────────────────────────────────────────────────────
     @GET
     public Response getAll(
             @QueryParam("rooms")    Integer rooms,
@@ -65,9 +61,6 @@ public class ApartmentResource {
                 .build();
     }
 
-    // ─────────────────────────────────────────────────────────────────────
-    // GET /api/apartments/{id}
-    // ─────────────────────────────────────────────────────────────────────
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") int id) {
@@ -81,9 +74,6 @@ public class ApartmentResource {
         return Response.ok(found.get()).build();
     }
 
-    // ─────────────────────────────────────────────────────────────────────
-    // POST /api/apartments  →  201 Created
-    // ─────────────────────────────────────────────────────────────────────
     @POST
     public Response create(Apartment apt) {
         Response validation = validate(apt);
@@ -96,9 +86,6 @@ public class ApartmentResource {
         return Response.status(Response.Status.CREATED).entity(apt).build();
     }
 
-    // ─────────────────────────────────────────────────────────────────────
-    // PUT /api/apartments/{id}  →  200 OK
-    // ─────────────────────────────────────────────────────────────────────
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") int id, Apartment updated) {
@@ -122,9 +109,6 @@ public class ApartmentResource {
         return Response.ok(apt).build();
     }
 
-    // ─────────────────────────────────────────────────────────────────────
-    // DELETE /api/apartments/{id}  →  204 No Content
-    // ─────────────────────────────────────────────────────────────────────
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") int id) {
@@ -134,10 +118,6 @@ public class ApartmentResource {
         }
         return Response.noContent().build();
     }
-
-    // ─────────────────────────────────────────────────────────────────────
-    // Допоміжні методи
-    // ─────────────────────────────────────────────────────────────────────
 
     /** Запускає Bean Validation і повертає 400 якщо є порушення, або null якщо все ок */
     private Response validate(Apartment apt) {
