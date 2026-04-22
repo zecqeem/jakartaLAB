@@ -53,6 +53,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- EJB 3.x API (надається GlassFish, scope=provided) -->
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- JAX-RS: Jersey 3.x (Jakarta EE 10 compatible) -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
