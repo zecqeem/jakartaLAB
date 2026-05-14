@@ -16,7 +16,7 @@ class ApartmentResourceTest {
     static void setup() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
-        RestAssured.basePath = "/jakartalabs_war_exploded/api";
+        RestAssured.basePath = "/jakartalabs-1.0-SNAPSHOT/api";
     }
 
     @Test

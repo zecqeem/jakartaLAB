@@ -33,14 +33,24 @@ public class ApartmentRepositoryJpa implements ApartmentRepository {
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Apartment> findByCriteria(Integer rooms, Integer maxPrice) {
-        TypedQuery<Apartment> query = em.createQuery(
-                "SELECT a FROM Apartment a " +
-                "WHERE (:rooms IS NULL OR a.rooms = :rooms) " +
-                "AND (:maxPrice IS NULL OR a.price <= :maxPrice)",
-                Apartment.class
-        );
-        query.setParameter("rooms",    rooms);
-        query.setParameter("maxPrice", maxPrice);
+        StringBuilder jpql = new StringBuilder("SELECT a FROM Apartment a WHERE 1=1");
+
+        if (rooms != null) {
+            jpql.append(" AND a.rooms = :rooms");
+        }
+        if (maxPrice != null) {
+            jpql.append(" AND a.price <= :maxPrice");
+        }
+
+        TypedQuery<Apartment> query = em.createQuery(jpql.toString(), Apartment.class);
+
+        if (rooms != null) {
+            query.setParameter("rooms", rooms);
+        }
+        if (maxPrice != null) {
+            query.setParameter("maxPrice", maxPrice);
+        }
+
         return query.getResultList();
     }
 

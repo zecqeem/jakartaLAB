@@ -29,6 +29,7 @@ public class LandlordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        req.setCharacterEncoding("UTF-8");
         try {
             int rooms = Integer.parseInt(req.getParameter("rooms"));
             int price = Integer.parseInt(req.getParameter("price"));
